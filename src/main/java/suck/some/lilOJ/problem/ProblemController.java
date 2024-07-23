@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,12 +27,12 @@ public class ProblemController {
         this.problemRepository = problemRepository;
     }
 
-    @GetMapping("/problems")
+    @GetMapping("/problems/")
     public List<Problem> getAllProblems() {
         return problemRepository.findAll();
     }
 
-    @GetMapping("/problems/{id}")
+    @GetMapping("/problems/{id}/")
     public Problem findProblemById(@PathVariable Integer id) {
         Optional<Problem> problem = problemRepository.findById(id);
         if (problem.isEmpty()) {
@@ -40,6 +41,7 @@ public class ProblemController {
         return problem.get();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/problems/create")
     void createProblem(@Valid @RequestBody Problem problem) {
