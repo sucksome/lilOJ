@@ -1,16 +1,22 @@
 package suck.some.lilOJ.problem;
 
-import java.util.List;
+// import java.util.List;
+
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Version;
+import org.springframework.data.relational.core.mapping.Table;
 
 import jakarta.validation.constraints.NotEmpty;
 
+@Table("problems")
 public record Problem(
-        Integer id,
-        @NotEmpty String title,
-        String descripion,
-        List<String> sampleInput,
-        List<String> sampleOutput,
-        @NotEmpty String author
+                @Id Integer id,
+                @NotEmpty String title,
+                String description,
+                String sampleInput,
+                String sampleOutput,
+                @NotEmpty String author,
+                @Version Integer version
 
 ) {
 }

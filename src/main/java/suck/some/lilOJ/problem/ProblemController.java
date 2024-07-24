@@ -3,6 +3,7 @@ package suck.some.lilOJ.problem;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.validation.Valid;
 
 import java.util.List;
@@ -45,18 +46,36 @@ public class ProblemController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/problems/create")
     void createProblem(@Valid @RequestBody Problem problem) {
-        problemRepository.create(problem);
+        problemRepository.save(problem);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("problems/{id}/edit")
     void updateProblem(@PathVariable String id, @Valid @RequestBody Problem problem) {
-        problemRepository.update(problem);
+        problemRepository.save(problem);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("problems/{id}/delete")
     void deleteProblem(@PathVariable Integer id) {
-        problemRepository.delete(id);
+        problemRepository.deleteById(id);
+    }
+
+    @PostConstruct
+    private void init() {
+        System.out.println("Number of problems: " + problemRepository.count());
+        if (problemRepository.count() == 0) {
+            problemRepository
+                    .save(new Problem(1, "A+B Problem", "Calculate the sum of two integers", "1 2", "3", "admin",
+                            null));
+            problemRepository.save(
+                    new Problem(2, "A-B Problem", "Calculate the difference of two integers", "1 2", "-1", "admin",
+                            null));
+            problemRepository.save(
+                    new Problem(3, "A*B Problem", "Calculate the product of two integers", "2 3",
+                            "6", "admin", null));
+            problemRepository.save(
+                    new Problem(4, "A/B Problem", "Calculate the quotient of two integers", "6 3", "2", "admin", null));
+        }
     }
 }
